@@ -7,11 +7,11 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:   "clickhouse-exporter",
-	Short: "clickhouse-exporter",
-	Long:  `clickhouse-exporter`,
+	Use:   "prometheus_clickhouse_exporter",
+	Short: "prometheus_clickhouse_exporter",
+	Long:  `prometheus_clickhouse_exporter`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Do Stuff Here
+
 	},
 }
 
@@ -29,6 +29,7 @@ func init() {
 	RootCmd.PersistentFlags().Bool("production", false, "Run in production mode")
 
 	viper.BindPFlag("production", RootCmd.PersistentFlags().Lookup("production"))
+	viper.BindPFlag("help", RootCmd.PersistentFlags().Lookup("help"))
 	viper.BindPFlag("listen", RootCmd.PersistentFlags().Lookup("listen"))
 	viper.BindPFlag("prometheus.namespace", RootCmd.PersistentFlags().Lookup("prometheus-namespace"))
 	viper.BindPFlag("prometheus.subsystem", RootCmd.PersistentFlags().Lookup("prometheus-subsystem"))

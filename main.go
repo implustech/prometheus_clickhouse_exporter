@@ -1,10 +1,11 @@
 package main
 
 import (
+	"github.com/implustech/prometheus_clickhouse_exporter/cmd"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/roistat/go-clickhouse"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"implus.co/prometheus_clickhouse_exporter/cmd"
 	"net/http"
 	"os"
 	"regexp"
@@ -23,15 +24,7 @@ func NameToUnderscore(src string) string {
 	return strings.ToLower(re.ReplaceAllString(src, "${1}_${2}"))
 }
 
-func main() {
-
-	if err := cmd.RootCmd.Execute(); err != nil {
-		logger.Println(err)
-		os.Exit(-1)
-	}
-
-	initLogger()
-
+func run(cmd *cobra.Command, args []string) {
 	clickhouseConnection := viper.GetString("clickhouse.connection")
 	logger.Info("clickhouse.connection ", clickhouseConnection)
 	logger.Info("production ", viper.GetBool("production"))
@@ -97,5 +90,15 @@ func main() {
 	})
 
 	logger.Fatalln(http.ListenAndServe(viper.GetString("listen"), mux))
+}
 
+func main() {
+	initLogger()
+
+	cmd.RootCmd.Run = run
+
+	if err := cmd.RootCmd.Execute(); err != nil {
+		logger.Println(err)
+		os.Exit(-1)
+	}
 }
